@@ -1,103 +1,90 @@
 import { useRecoilValue } from "recoil";
-import { history } from "../stores/atoms/history.atom";
+import { history, time } from "../stores/atoms/history.atom";
+import { useEffect, useState } from "react";
+import SendReceive from "./sendReceive.component";
 
 const Balence = () => {
+    const timeData = useRecoilValue(time)
     const historyData = useRecoilValue(history)
+    const [chashInflow, setCashInflow] = useState(0)
+    const [chashOutflow, setCashOutflow] = useState(0)
+
+    const calculateInflow = () => {
+        let inflow = 0
+        historyData.map((item, index) => {
+            if (historyData[index] - historyData[index - 1] > 0) {
+                inflow += historyData[index] - historyData[index - 1]
+            }
+        })
+        return inflow
+    }
+
+    const calculateOutflow = () => {
+        let outflow = 0
+        historyData.map((item, index) => {
+            if (historyData[index] - historyData[index - 1] < 0) {
+                outflow += historyData[index] - historyData[index - 1]
+            }
+        })
+        return outflow
+    }
+
+    useEffect(() => {
+        setCashInflow(calculateInflow())
+        setCashOutflow(calculateOutflow())
+    }, [historyData])
 
     return (
-        <div className="flex  flex-col  items-center m-10 p-2 border">
-            <h4>Your Balence</h4>
-            <h1 id="balence" className="text-[70px]">${historyData[historyData.length -1]}</h1>
-            <div>
+        <div className="flex  flex-col  items-center m-10 p-2">
+            <div className="p-3 shadow-xl rounded-md w-[500px]">
+                <h4 className="font-bold">Balence</h4>
+                <h1 id="balence" className="text-[70px]">${historyData[historyData.length - 1]}</h1>
                 <div className="flex">
-                    <label
-                        className="relative block rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
-                    >
-                        <input
-                            type="text"
-                            id="Username"
-                            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 p-2"
-                            placeholder="Username"
-                        />
-
-                        <span
-                            className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                        >
-                            Account Number
-                        </span>
-                    </label>
-
-                    <label
-
-                        className="relative block rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
-                    >
-                        <input
-                            type="number"
-                            id="Username"
-                            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 p-2 w-20"
-                            placeholder="Username"
-                        />
-
-                        <span
-                            className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                        >
-                            Amount
-                        </span>
-                    </label>
-
-                    <a
-                        className="inline-block rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
-                        href="#"
-                    >
-                        Send Money
-                    </a>
-
-
+                    <p className="p-2">
+                        <span className="text-green-500">+${chashInflow}</span>
+                    </p>
+                    <p className="p-2">
+                        <span className="text-red-500">-${chashOutflow}</span>
+                    </p>
                 </div>
-                <div className="flex">
+            </div>
+            
+            <div className="overflow-x-auto  scroll-auto  h-96 shadow-xl rounded-md w-[500px]">
+                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                    <thead className="ltr:text-left rtl:text-right">
+                        <tr className='font-bold'>
+                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900"></th>
+                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Credit / Devid</th>
+                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Date</th>
+                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Balence</th>
 
-                    <label
-                        className="relative block rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
-                    >
-                        <input
-                            type="text"
-                            id="Username"
-                            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 p-2"
-                            placeholder="Username"
-                        />
+                        </tr>
+                    </thead>
 
-                        <span
-                            className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                        >
-                            Account Number
-                        </span>
-                    </label>
+                    <tbody className="divide-y divide-gray-200">
+                        {historyData.map((item, index) => (
+                            historyData[index] - historyData[index - 1] > 0 ?
+                                <tr className='bg-green-300'>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{historyData[index] - historyData[index - 1]}</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">Credit</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{timeData[index]}</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item}</td>
 
-                    <label
+                                </tr> :
+                                <tr className='bg-red-300'>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{historyData[index] - historyData[index - 1]}
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                        Devid
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{timeData[index]}</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item}</td>
+                                </tr>
+                        ))}
 
-                        className="relative block rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
-                    >
-                        <input
-                            type="number"
-                            id="Username"
-                            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 p-2 w-20"
-                            placeholder="Username"
-                        />
 
-                        <span
-                            className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                        >
-                            Amount
-                        </span>
-                    </label>
-
-                    <a
-                        className="inline-block rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
-                        href="#"
-                    >
-                        Request Money
-                    </a>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     )
