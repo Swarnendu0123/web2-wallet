@@ -8,42 +8,52 @@ const History = () => {
     const timeData = useRecoilValue(time)
 
     return (
-        <div className='flex  flex-col  items-center m-10 p-10 border'>
+        <div className='flex  flex-col  items-center m-10 p-2 border'>
             <h4>History</h4>
             <LineChart
-                xAxis={[{ data: timeData }]}
+                xAxis={[{ data: timeData, scaleType: 'point', }]}
                 series={[
-                    {
-                        data: historyData,
-                    },
+                    { data: historyData },
                 ]}
-                width={500}
+                width={700}
                 height={300}
             />
-    
 
-            <div className="overflow-x-auto">
+
+            <div className="overflow-x-auto  scroll-auto  h-96">
                 <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
                     <thead className="ltr:text-left rtl:text-right">
-                        <tr>
+                        <tr className='font-bold'>
+                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900"></th>
+                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Credit / Devid</th>
                             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Date</th>
                             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Balence</th>
-                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Cred/Dev</th>
-                            <th className="px-4 py-2"></th>
+
                         </tr>
                     </thead>
 
                     <tbody className="divide-y divide-gray-200">
-                    {historyData.map((item, index) => (
-                        <tr>
-                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">24/05/1995</td>
-                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item}</td>
-                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{historyData[index] - historyData[index-1]}</td>
-                            
-                        </tr>
-                    ))}
+                        {historyData.map((item, index) => (
+                            historyData[index] - historyData[index - 1] > 0 ?
+                                <tr className='bg-green-300'>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{historyData[index] - historyData[index - 1]}</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">Credit</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{timeData[index]}</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item}</td>
 
-                       
+                                </tr> :
+                                <tr className='bg-red-300'>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{historyData[index] - historyData[index - 1]}
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                        Devid
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{timeData[index]}</td>
+                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item}</td>
+                                </tr>
+                        ))}
+
+
                     </tbody>
                 </table>
             </div>

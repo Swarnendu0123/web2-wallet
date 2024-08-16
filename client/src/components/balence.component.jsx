@@ -5,7 +5,7 @@ const Balence = () => {
     const historyData = useRecoilValue(history)
 
     return (
-        <div className="flex  flex-col  items-center m-10 p-10 border">
+        <div className="flex  flex-col  items-center m-10 p-2 border">
             <h4>Your Balence</h4>
             <h1 id="balence" className="text-[70px]">${historyData[historyData.length -1]}</h1>
             <div>
