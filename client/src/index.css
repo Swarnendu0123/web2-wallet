@@ -1,4 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* styles.css or a global Tailwind CSS file */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
+/* Extend the theme to include colors similar to GitHub dark theme */
+@layer base {
+  .custom-chart .MuiLineChart-root {
+    background-color: #161b22; /* GitHub dark background */
+    border-color: #30363d; /* GitHub dark border */
+    border-width: 2px;
+  }
+
+  .custom-chart .MuiLineChart-axis path,
+  .custom-chart .MuiLineChart-axis line {
+    stroke: #30363d; /* GitHub dark axis lines */
+  }
+
+  .custom-chart .MuiLineChart-grid {
+    stroke: #30363d; /* GitHub dark grid lines */
+  }
+
+  .custom-chart .MuiLineChart-line {
+    stroke: #1d4ed8; /* Tailwind blue-700 */
+  }
+
+  .custom-chart .MuiLineChart-axis text {
+    fill: #e1e4e8; /* GitHub dark text color */
+  }
+
+  .custom-chart .MuiLineChart-tooltip {
+    background-color: #30363d; /* GitHub dark tooltip background */
+    color: #e1e4e8; /* GitHub dark text color in tooltip */
+  }
+}
